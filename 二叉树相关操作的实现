@@ -13,4 +13,112 @@
 0.07、0.19、0.02、0.06、0.32、0.03、0.21和0.10
 为这8个字母构造一棵哈夫曼树，并输出每个字母对应的哈夫曼编码。
 */
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+using namespace std;
+typedef struct BiTNode
+{
+    char data;
+    struct BiTNode *lchild,*rchild;
+}BiTNode,*BiTree;
+void InOrderTraverse_first(BiTree T)//先序遍历二叉树
+{   
+
+    if(T)
+    {   
+        cout<<T->data;
+        InOrderTraverse_first(T->lchild);
+        InOrderTraverse_first(T->rchild);
+    }
+}
+void InOrderTraverse_media(BiTree T)//中序遍历二叉树
+{   
+
+    if(T)
+    {
+        InOrderTraverse_media(T->lchild);
+        cout<<T->data;
+        InOrderTraverse_media(T->rchild);
+    }
+}
+void InOrderTraverse_last(BiTree T)//后序遍历二叉树
+{   
+
+    if(T)
+    {
+        InOrderTraverse_last(T->lchild);
+        InOrderTraverse_last(T->rchild);
+        cout<<T->data;
+    }
+}
+void InitBiTree(BiTree &T)
+{
+    T=new BiTNode;
+    T = NULL;
+}
+void CreatBiTree(BiTree &T)//先序遍历建立二叉链表
+{
+    char ch;
+    cin >> ch;
+    if(ch=='#')
+        T = NULL;
+    else
+    {
+        T=new BiTNode;
+        T->data=ch;
+        CreatBiTree(T->lchild);
+        CreatBiTree(T->rchild);
+    }
+}
+void Copy(BiTree T,BiTree &NewT)//复制二叉树
+{
+    if(T==NULL)
+    {
+        NewT=NULL;
+        return;
+    }
+    else
+    {
+        NewT=new BiTNode;
+        NewT->data=T->data;
+        Copy(T->lchild,NewT->lchild);
+        Copy(T->rchild,NewT->rchild);
+    }
+}
+int Depth(BiTree T)//计算二叉树的深度
+{
+    int m, n;
+    if(T==NULL)
+        return 0;
+    else
+    {
+        m=Depth(T->lchild);
+        n=Depth(T->rchild);
+        if(m>n)
+            return (m+1);
+        else
+            return (n+1);
+    }
+}
+int NodeCount(BiTree T)//统计二叉树节点的个数
+{
+    if(T==NULL)
+        return 0;
+    else
+        return NodeCount(T->lchild) + NodeCount(T->rchild) + 1;
+}
+
+int main()
+{
+    BiTree T;
+    CreatBiTree(T);
+    InOrderTraverse_first(T);
+    cout << endl;
+    InOrderTraverse_media(T);
+    cout << endl;
+    InOrderTraverse_media(T);
+    cout << endl;
+    return 0;
+}
  
