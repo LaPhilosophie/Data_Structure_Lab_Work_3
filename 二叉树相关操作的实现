@@ -109,16 +109,20 @@ int NodeCount(BiTree T)//统计二叉树节点的个数
         return NodeCount(T->lchild) + NodeCount(T->rchild) + 1;
 }
 
+
 int main()
 {
     BiTree T;
     CreatBiTree(T);
+    cout<<"先序遍历"<<endl;
     InOrderTraverse_first(T);
     cout << endl;
+    cout<<"中序遍历"<<endl;
     InOrderTraverse_media(T);
     cout << endl;
-    InOrderTraverse_media(T);
+    cout<<"后序遍历"<<endl;
+    InOrderTraverse_last(T);
     cout << endl;
     return 0;
 }
- 
+
