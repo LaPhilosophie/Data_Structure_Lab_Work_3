@@ -1,0 +1,103 @@
+#include <iostream>
+#include <stdio.h>
+#include <cstring>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+typedef struct
+{
+    int weight;
+    int parent, lchild, rchild;
+} HTNode, *HuffmanTree;
+
+void Select(HuffmanTree &HT,int n,int &s1,int &s2)
+{
+    int j;
+    s1=0;
+    s2=0;
+    for(j=1;j<=n;j++)
+    {
+        if(HT[j].parent==0)
+        {
+            if(HT[j].weight<HT[s1].weight)
+                s1=j;
+        }
+    }
+    for(j=1;j<=n;j++)
+    {
+        if(HT[j].parent==0&&j!=s1)
+        {
+            if(HT[j].weight<HT[s2].weight)
+                s2=j;
+        }
+    }
+}
+void CreatHuffmanTree(HuffmanTree &HT,int n)
+{//构造哈夫曼树HT
+    
+    if(n<=1)
+        return ;
+    int s1,s2,i;
+    int m = 2 * n - 1;//2n-1个节点
+    
+    HT=new HTNode[m+1];
+    //0号单元未使用，所以分配 m+1个单元，HT[m]表示根节点
+    
+    for ( i = 1; i <= m;i++)
+    //把1~m号单元中双亲、左孩子、右孩子下标初始化为0
+        HT[i].parent = HT[i].lchild = HT[i].rchild = 0;
+    
+    for ( i = 1; i <= n;i++)//输入前n个单元中叶子节点的权值
+        cin>>HT[i].weight;
+
+    /*初始化结束，下面开始创建哈夫曼树*/
+
+    for (i = n + 1; i <= m;i++)
+    {//进行n-1次的选择、删除、合并来创建哈夫曼树
+        Select(HT,i-1,s1,s2);//这个函数是重点
+        HT[s1].parent=i;
+        HT[s2].parent = i;
+        HT[i].lchild = s1;
+        HT[i].rchild = s2;
+        HT[i].weight = HT[s1].weight + HT[s2].weight;
+    }
+}//哈夫曼树构造完成
+
+typedef char **HuffmanCode;
+
+void CreatHuffmanCode(HuffmanTree HT,HuffmanCode &HC,int n)
+{
+    int start, c, f,i;
+    HC=new char*[n+1];
+    char cd[n];
+    cd[n-1]='\0';
+    for (i = 1; i <= n;i++)
+    {
+        start=n-1;
+        c=i;
+        f = HT[i].parent;
+        while(f!=0)
+        {
+            start--;
+            if(HT[f].lchild==c)
+                cd[start]='0';
+            else
+                cd[start]='1';
+            c=f;
+            f=HT[f].parent;
+        }
+        HC[i] = new char[n - start];
+        strcpy(HC[i], &cd[start]);
+    }
+}
+int main()
+{
+    HuffmanTree HT;
+    HuffmanCode HC;
+    CreatHuffmanTree(HT,8);
+    CreatHuffmanCode(HT, HC, 8);
+    for(int i=1;i<=8;i++)
+       cout<<HC[i]<<endl;
+    return 0;
+}
